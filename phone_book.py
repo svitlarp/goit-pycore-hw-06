@@ -34,7 +34,7 @@ class Phone(Field):
     @value.setter    
     def value(self, value):
         if not value.isdigit():
-            raise TypeError("Phone number should contains digits only, with no other characters")
+            raise TypeError("Phone number should contain digits only, with no other characters")
         if (len(value) != 10):
             raise ValueError("Number should be equal to 10 digits")
         self._value = value 
@@ -45,20 +45,21 @@ class Record():
     # Клас для зберігання інформації про контакт, включаючи ім'я та список телефонів
     def __init__(self, name):
         self.name = Name(name)
-        self.phone = []
+        self.phones = []
 
     def add_phone(self, phone):
-        pass
+        self.phones.append(Phone(phone))
 
-    def remove_phone(self, name):
-        pass
+    def remove_phone(self, phone):
+        self.phones.remove(phone)
 
-    def edit_phone(self, name):
-        pass
+    def edit_phone(self, phone, new_phone):
+        for i in range(len(self.phones)):
+            if self.phones[i].value == phone:
+                self.phones[i] = Phone(new_phone)
 
-    def find_phone(self, name):
-        pass
-
+    def find_phone(self, phone):
+        return next((p for p in self.phones if p.value == phone), None)
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
@@ -69,63 +70,48 @@ class AddressBook(UserDict):
     # Клас для зберігання та управління записами.
 
     def __init__(self):
-        pass
+        self.data = dict()
 
-    def add_record():
+    def add_record(self, record:Record):                               
         # self.data Реалізовано метод add_record, який додає запис до self.data.
-        pass
+        self.data[record.name.value] = record
 
-    def find(name: str) -> Record:
-        pass
+    def find(self, name: str) -> Record:
+        return self.data[name]
 
-    def delete(name: str):
-        pass
-
-
-
-# book = AddressBook()
-# # Створення запису для John
-# john_record = Record("John")
-# john_record.add_phone("1234567890")
-# john_record.add_phone("5555555555")
-# # Додавання запису John до адресної книги
-# book.add_record(john_record)
-
-# # Виведення всіх записів у книзі
-# for name, record in book.data.items():
-#     print(record)
-
-# # Знаходження та редагування телефону для John
-# john = book.find("John")
-# john.edit_phone("1234567890", "1112223333")    
-
-# print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
-
-# # Пошук конкретного телефону у записі John
-# found_phone = john.find_phone("5555555555")
-# print(f"{john.name}: {found_phone}")  # Виведення: 5555555555
+    def delete(self, name: str):
+        del self.data[name]
 
 
-# # Видалення запису Jane
-# book.delete("John")
+# Створення нової адресної книги
+book = AddressBook()
 
+# Створення запису для John
+john_record = Record("John")
+john_record.add_phone("1234567890")
+john_record.add_phone("5555555555")
 
+# Додавання запису John до адресної книги
+book.add_record(john_record)
 
+# Створення та додавання нового запису для Jane
+jane_record = Record("Jane")
+jane_record.add_phone("9876543210")
+book.add_record(jane_record)
 
+# Виведення всіх записів у книзі
+for name, record in book.data.items():
+    print(record)
 
+# Знаходження та редагування телефону для John
+john = book.find("John")
+john.edit_phone("1234567890", "1112223333")
 
+print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
 
+# Пошук конкретного телефону у записі John
+found_phone = john.find_phone("5555555555")
+print(f"{john.name}: {found_phone}")  # Виведення: 5555555555
 
-# ____________________________________________
-# phone1 = Phone('0639992511')
-# phone2 = Phone('0991252525')
-# phone3 = Phone('099125200001212')
-# phone4 = Phone('oneonetwo')
-# print(phone1)
-# print(phone2)
-# print(phone3)
-# print(phone4)
-# phone2.value = '12345678900'
-# print(phone2)
-# phone2.value = '0639444aaa'
-# print(phone2)
+# Видалення запису Jane
+book.delete("Jane")
