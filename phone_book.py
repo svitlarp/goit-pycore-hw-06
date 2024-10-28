@@ -51,7 +51,9 @@ class Record():
         self.phones.append(Phone(phone))
 
     def remove_phone(self, phone):
-        self.phones.remove(phone)
+        for p in self.phones:
+            if p.value == phone:
+                self.phones.remove(p)
 
     def edit_phone(self, phone, new_phone):
         for i in range(len(self.phones)):
@@ -115,3 +117,6 @@ print(f"{john.name}: {found_phone}")  # Виведення: 5555555555
 
 # Видалення запису Jane
 book.delete("Jane")
+
+john_record.remove_phone('5555555555')
+print(john)  # Виведення: Contact name: John, phones: 1112223333
